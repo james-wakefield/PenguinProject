@@ -1,0 +1,144 @@
+---
+title: "Week4Penguins"
+output: pdf_document
+date: "2024-11-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(palmerpenguins)
+library(janitor)
+library(here)
+        
+```
+
+a place to start
+Then make a boxplot
+```{r}
+
+penguins_clean <- read.csv(here("data","penguins_clean.csv"))
+
+flipper_boxplot <- ggplot(
+  data = penguins_clean,
+  aes(x = species,
+      y = flipper_length_mm)) +
+  geom_boxplot()
+flipper_boxplot
+```
+Remove NA values just from the columns that we are interested in
+Subset the columns - species and flipper_length_mm
+```{r}
+penguins_flippers <- penguins_clean %>% #pipe means "and then"
+  select(species,flipper_length_mm) %>%
+  drop_na()
+colnames(penguins_flippers)
+```
+```{r}
+flipper_boxplot <- ggplot(
+  data = penguins_flippers,
+  aes(x = species,
+      y = flipper_length_mm)) +
+  geom_boxplot()
+flipper_boxplot
+```
+
+
+
+shorten_species <- function(penguins_data) {
+    penguins_data %>%
+        mutate(species = case_when(
+            species == "Adelie Penguin (Pygoscelis adeliae)" ~ "Adelie",
+            species == "Chinstrap penguin (Pygoscelis antarctica)" ~ "Chinstrap",
+            species == "Gentoo penguin (Pygoscelis papua)" ~ "Gentoo"
+        ))
+}
+
+
+```{r}
+#shorten_species_names 
+
+shorten_species <- function(penguins_flippers) {
+    penguins_flippers %>%
+        mutate(species = case_when(
+            species == "Adelie Penguin (Pygoscelis adeliae)" ~ "Adelie",
+            species == "Chinstrap penguin (Pygoscelis antarctica)" ~ "Chinstrap",
+            species == "Gentoo penguin (Pygoscelis papua)" ~ "Gentoo"
+        ))
+}
+shorten_species(penguins_flippers)
+
+```
+
+#### works well
+flipper_boxplot <- ggplot(
+  data = penguins_flippers,
+  aes(x = species,
+      y = flipper_length_mm)) +
+  geom_boxplot(aes(color = species),
+               show.legend = FALSE) + 
+  geom_jitter(aes(color = species),
+              show.legend = FALSE,
+              position = position_jitter(
+                width = 0.2,
+                seed = 0)
+              )
+
+flipper_boxplot
+
+####
+
+```{r}
+flipper_boxplot <- ggplot(
+  data = penguins_flippers,
+  aes(x = species,
+      y = flipper_length_mm)) +
+  geom_boxplot(aes(color = species),
+               show.legend = FALSE) + 
+  geom_jitter(aes(color = species),
+              alpha = 0.3, #more transparent
+              show.legend = FALSE,
+              position = position_jitter(
+                width = 0.2,
+                seed = 0)) +
+  labs(x = "Species",
+       y = "Flipper Length (mm)")
+
+flipper_boxplot
+```
+
+
+```{r}
+
+#need to change the species names first ######then it will work hopefully
+#
+species_colours <- c("Adelie" = "darkorange",
+                     "Chinstrap" = "purple",
+                     "Gentoo" = "cyan4")
+
+flipper_boxplot <- ggplot(
+  data = penguins_flippers,
+  aes(x = species,
+      y = flipper_length_mm)) +
+  geom_boxplot(aes(color = species),
+               width = 0.3,
+               show.legend = FALSE) + 
+  geom_jitter(aes(color = species),
+              alpha = 0.3, #more transparent
+              show.legend = FALSE,
+              position = position_jitter(
+                width = 0.2,
+                seed = 0)) +
+  scale_color_manual(values = species_colours) +
+  labs(x = "Penguin species",
+       y = "Flipper Length (mm)") +
+  theme_bw()
+
+flipper_boxplot
+```
+```{r}
+
+
+```
+

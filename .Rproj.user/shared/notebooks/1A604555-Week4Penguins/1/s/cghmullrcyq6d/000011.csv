@@ -1,0 +1,6 @@
+"0","flipper_boxplot <- ggplot("
+"0","  data = penguins_flippers,"
+"0","  aes(x = species,"
+"0","      y = flipper_length_mm)) +"
+"0","  geom_boxplot()"
+"0","flipper_boxplot"

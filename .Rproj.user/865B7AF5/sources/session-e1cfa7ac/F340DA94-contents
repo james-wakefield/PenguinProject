@@ -1,0 +1,88 @@
+---
+title: "penguin_analysis"
+output: html_document
+date: "2024-10-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(palmerpenguins)
+library(janitor)
+library(here)
+```
+
+```{r}
+source(here("Functions","cleaning.R"))
+```
+
+
+```{r}
+
+#head(penguins_raw)
+#colnames(penguins_raw)
+
+```
+
+```{r}
+#write.csv(penguins_raw, here("data", "penguins_raw.csv"))
+
+```
+
+```{r}
+Penguins_raw <- read.csv(here("data","penguins_raw.csv"))
+```
+
+
+
+```{r}
+#This block is bad code as it overwrites one
+
+#penguins_clean <- select(penguins_raw,-Comments)
+
+#penguins_clean <- select(penguins_clean,-starts_with("Delta"))
+#removes any columns that start with delta
+
+#colnames(penguins_clean)
+```
+
+```{r}
+#using piping to remove comments and delta columns
+
+penguins_clean <- penguins_raw %>% #pipe tells the code to do it in a list
+  select(-Comments) %>%
+  select(-starts_with("Delta")) %>% #removes 2 columns called delta
+  clean_names()
+
+
+colnames(penguins_clean)
+```
+
+```{r}
+write.csv(penguins_clean, here("data", "penguins_clean.csv"))
+```
+
+```{r}
+#Making a new function
+
+cleaning_penguin_columns <- function(raw_data){
+  raw_data %>%
+    clean_names() %>%
+    select(-comments) %>%
+    select(-starts_with("delta")) #removes 2 columns called delta
+}
+
+penguins_clean <- cleaning_penguin_columns(penguins_raw)
+```
+
+```{r}
+#install renv
+
+#renv::init()
+
+#install.packages("table1")
+
+renv::snapshot()
+
+``
